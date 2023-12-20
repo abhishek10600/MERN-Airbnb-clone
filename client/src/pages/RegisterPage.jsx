@@ -12,11 +12,16 @@ const RegisterPage = () => {
     ev.preventDefault();
     try {
       if (password === confirmPassword) {
-        await axios.post("/users/register", {
+        const res = await axios.post("/users/register", {
           name,
           email,
           password,
         });
+        if (res.data.success === true) {
+          alert("Account created successfully");
+        } else {
+          alert("Some error!");
+        }
       } else {
         alert("Password and confirm password does not match");
       }
