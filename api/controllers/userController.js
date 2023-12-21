@@ -1,4 +1,5 @@
 import User from "../models/UserModel.js"
+import { createTokenCookie } from "../utils/createTokenCookie.js"
 
 export const registerUser = async (req, res, next) => {
     const { name, email, password } = req.body
@@ -33,6 +34,29 @@ export const registerUser = async (req, res, next) => {
             message: "User created successfully",
             user
         })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const loginUser = async (req, res, next) => {
+    const { email, password } = req.body
+    try {
+        let user = await User.findOne({ email })
+        if (!user) {
+            res.status(404).json({
+                success: false,
+                message: "Invalid email or password!"
+            })
+        }
+        const isPasswordCorrect = await user.isPasswordValidated(password)
+        if (!isPasswordCorrect) {
+            res.status(404).json({
+                success: false,
+                message: "Invalid email or password"
+            })
+        }
+        createTokenCookie(res, user, 200, "Logged in successfully!")
     } catch (error) {
         console.log(error)
     }
