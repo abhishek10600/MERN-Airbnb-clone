@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../contexts/UserContext";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setUser, setIsLoggedIn } = useContext(UserContext);
   const handleLoginSubmit = async (ev) => {
     ev.preventDefault();
     try {
@@ -21,7 +23,9 @@ const LoginPage = () => {
         }
       );
       if (res.data.success === true) {
-        alert("logged in successfully");
+        setUser(res.data.user);
+        setIsLoggedIn(true);
+        alert(res.data.message);
         navigate("/");
       }
     } catch (error) {

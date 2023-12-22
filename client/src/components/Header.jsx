@@ -1,6 +1,10 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { UserContext } from "../contexts/UserContext";
 
 const Header = () => {
+  const { user, isLoggedIn } = useContext(UserContext);
+  console.log(isLoggedIn);
   return (
     <header className="flex justify-between">
       <Link to="/" className="flex items-center gap-1">
@@ -75,6 +79,7 @@ const Header = () => {
             />
           </svg>
         </div>
+        {isLoggedIn && <div>{user.name}</div>}
       </Link>
     </header>
   );

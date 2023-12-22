@@ -5,12 +5,13 @@ import LoginPage from "./pages/LoginPage";
 import Layout from "./Layout";
 import RegisterPage from "./pages/RegisterPage";
 import axios from "axios";
+import { UserContextProvider } from "./contexts/UserContext";
 
 axios.defaults.baseURL = "http://localhost:4000/api/v1";
 
 function App() {
   return (
-    <>
+    <UserContextProvider>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
@@ -18,7 +19,7 @@ function App() {
           <Route exact path="/register" element={<RegisterPage />} />
         </Route>
       </Routes>
-    </>
+    </UserContextProvider>
   );
 }
 
