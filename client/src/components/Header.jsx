@@ -4,7 +4,6 @@ import { UserContext } from "../contexts/UserContext";
 
 const Header = () => {
   const { user, isLoggedIn } = useContext(UserContext);
-  console.log(isLoggedIn);
   return (
     <header className="flex justify-between">
       <Link to="/" className="flex items-center gap-1">
@@ -48,7 +47,7 @@ const Header = () => {
         </button>
       </div>
       <Link
-        to="/login"
+        to={user ? "/account" : "/login"}
         className="userWidget flex items-center gap-2 border border-gray-300 rounded-full py-2 px-4"
       >
         <svg

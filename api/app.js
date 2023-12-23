@@ -2,6 +2,7 @@ import dotenv from "dotenv"
 import express from "express"
 import CORS from "cors"
 import userRouter from "./routes/userRouter.js"
+import cookieParser from "cookie-parser"
 
 const app = express()
 
@@ -10,6 +11,7 @@ app.use(CORS({
     origin: "http://localhost:5173",
     credentials: true,
 }))
+app.use(cookieParser())
 
 app.get("/testing", (req, res) => {
     res.status(200).json({

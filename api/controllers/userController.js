@@ -1,5 +1,6 @@
 import User from "../models/UserModel.js"
 import { createTokenCookie } from "../utils/createTokenCookie.js"
+import jwt from "jsonwebtoken"
 
 export const registerUser = async (req, res, next) => {
     const { name, email, password } = req.body
@@ -57,6 +58,29 @@ export const loginUser = async (req, res, next) => {
             })
         }
         createTokenCookie(res, user, 200, "Logged in successfully!")
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getLoggedInUserDetails = async (req, res, next) => {
+    try {
+        let user = {}
+        const token = req.cookies.token || req.header("Authorization")?.replace("Bearer ", "")
+        if (!token) {
+            res.status(404).json({
+                success: false,
+                message: "Token not found or invalid token"
+            })
+        }
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+        req.user = await User.findById(decodedToken.id)
+        user = req.user
+        user.password = undefined
+        res.status(200).json({
+            success: true,
+            user
+        })
     } catch (error) {
         console.log(error)
     }
