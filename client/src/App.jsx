@@ -7,11 +7,12 @@ import RegisterPage from "./pages/RegisterPage";
 import axios from "axios";
 import { useContext, useEffect } from "react";
 import { UserContext } from "./contexts/UserContext";
+import AccoutPage from "./pages/AccoutPage";
 
 axios.defaults.baseURL = "http://localhost:4000/api/v1";
 
 function App() {
-  const { user, setUser, setIsLoggedIn } = useContext(UserContext);
+  const { setUser, setIsLoggedIn } = useContext(UserContext);
   const getUser = async () => {
     const res = await axios.get("/users/getLoggedInUserDetails", {
       headers: {
@@ -31,8 +32,9 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
-        <Route exact path="/login" element={<LoginPage />} />
-        <Route exact path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/account/:subpage?" element={<AccoutPage />} />
       </Route>
     </Routes>
   );

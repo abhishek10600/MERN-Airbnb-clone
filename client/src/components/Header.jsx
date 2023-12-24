@@ -4,6 +4,7 @@ import { UserContext } from "../contexts/UserContext";
 
 const Header = () => {
   const { user, isLoggedIn } = useContext(UserContext);
+  console.log(user);
   return (
     <header className="flex justify-between">
       <Link to="/" className="flex items-center gap-1">
