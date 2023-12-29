@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Perks from "./Perks";
+import axios from "axios";
 
 const Properties = () => {
   const { action } = useParams();
@@ -14,6 +15,22 @@ const Properties = () => {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [maxGuests, setMaxGuests] = useState(1);
+
+  const addPhotoByLink = async (ev) => {
+    ev.preventDefault();
+    try {
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/hotels/upload-by-link",
+        { link: photoLink }
+      );
+      setAddedPhotos((prev) => {
+        return [...prev, res.data.image];
+      });
+      setPhotoLink("");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div>
@@ -73,12 +90,26 @@ const Properties = () => {
                 value={photoLink}
                 onChange={(ev) => setPhotoLink(ev.target.value)}
               />
-              <button className="bg-gray-200 px-4 rounded-2xl">
+              <button
+                onClick={addPhotoByLink}
+                className="bg-gray-200 px-4 rounded-2xl"
+              >
                 Add&nbsp;photos
               </button>
             </div>
-            <div className="mt-2 grid grid-cols-3 md:grid-cols-3 lg:grid-cols-6">
-              <button className="flex justify-center gap-1 border bg-transparent rounded-2xl p-8 text-2xl text-gray-600">
+            <div className="mt-2 grid gap-2 grid-cols-3 md:grid-cols-3 lg:grid-cols-6">
+              {addedPhotos.length > 0 &&
+                addedPhotos.map((link) => (
+                  <div className="" key={link}>
+                    {
+                      <img
+                        className="rounded-2xl"
+                        src={"http://localhost:4000/uploads/" + link}
+                      />
+                    }
+                  </div>
+                ))}
+              <button className="flex items-center justify-center gap-1 border bg-transparent rounded-2xl text-2xl text-gray-600">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

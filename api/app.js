@@ -1,11 +1,18 @@
 import dotenv from "dotenv"
 import express from "express"
 import CORS from "cors"
+import path from "path"
+import { fileURLToPath } from "url"
 import userRouter from "./routes/userRouter.js"
+import hotelRouter from "./routes/hotelRouter.js"
 import cookieParser from "cookie-parser"
 
 const app = express()
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+app.use("/uploads", express.static(__dirname + "/uploads"))
 app.use(express.json())
 app.use(CORS({
     origin: "http://localhost:5173",
@@ -21,6 +28,7 @@ app.get("/testing", (req, res) => {
 })
 
 app.use("/api/v1/users", userRouter)
+app.use("/api/v1/hotels", hotelRouter)
 
 
 export default app
