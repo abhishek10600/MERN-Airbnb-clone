@@ -32,6 +32,28 @@ const Properties = () => {
     }
   };
 
+  const uploadPhoto = async (ev) => {
+    const files = ev.target.files;
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append("photos", files[i]);
+    }
+    const res = await axios.post(
+      "http://localhost:4000/api/v1/hotels/upload",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    console.log(res.data);
+    const filenames = res.data;
+    setAddedPhotos((prev) => {
+      return [...prev, ...filenames];
+    });
+  };
+
   return (
     <div>
       {action !== "new" && (
@@ -100,16 +122,20 @@ const Properties = () => {
             <div className="mt-2 grid gap-2 grid-cols-3 md:grid-cols-3 lg:grid-cols-6">
               {addedPhotos.length > 0 &&
                 addedPhotos.map((link) => (
-                  <div className="" key={link}>
-                    {
-                      <img
-                        className="rounded-2xl"
-                        src={"http://localhost:4000/uploads/" + link}
-                      />
-                    }
+                  <div className="h-32 flex" key={link}>
+                    <img
+                      className="rounded-2xl w-full object-cover"
+                      src={"http://localhost:4000/uploads/" + link}
+                    />
                   </div>
                 ))}
-              <button className="flex items-center justify-center gap-1 border bg-transparent rounded-2xl text-2xl text-gray-600">
+              <label className="h-32 flex items-center justify-center gap-1 border bg-transparent rounded-2xl text-2xl text-gray-600 cursor-pointer">
+                <input
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={uploadPhoto}
+                />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -125,7 +151,7 @@ const Properties = () => {
                   />
                 </svg>
                 Upload
-              </button>
+              </label>
             </div>
             <h2 className="text-2xl mt-4">Description</h2>
             <p className="text-sm text-gray-500">Description of the place.</p>

@@ -1,6 +1,7 @@
 import imageDownloader from "image-downloader"
 import path from "path"
 import { fileURLToPath } from "url"
+import fs from "fs"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -22,4 +23,17 @@ export const uploadImageByLink = async (req, res, next) => {
     } catch (error) {
         console.log(error.message)
     }
+}
+
+export const uploadImage = async (req, res, next) => {
+    let uploadedFiles = []
+    for (let i = 0; i < req.files.length; i++) {
+        const { path, originalname } = req.files[i]
+        const parts = originalname.split(".")
+        const ext = parts[parts.length - 1]
+        const newPath = path + "." + ext
+        fs.renameSync(path, newPath)
+        uploadedFiles.push(newPath.replace("uploads/", ""));
+    }
+    res.json(uploadedFiles)
 }
