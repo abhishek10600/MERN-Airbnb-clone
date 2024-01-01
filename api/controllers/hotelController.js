@@ -2,6 +2,7 @@ import imageDownloader from "image-downloader"
 import path from "path"
 import { fileURLToPath } from "url"
 import fs from "fs"
+import Place from "../models/PlaceMode.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -36,4 +37,30 @@ export const uploadImage = async (req, res, next) => {
         uploadedFiles.push(newPath.replace("uploads/", ""));
     }
     res.json(uploadedFiles)
+}
+
+export const addHotel = async (req, res, next) => {
+    const { title, address, addedPhotos, description, perks, extraInfo, checkIn, checkOut, maxGuests } = req.body
+    try {
+        console.log("hello")
+        const place = await Place.create({
+            owner: req.user._id,
+            title,
+            address,
+            addedPhotos,
+            description,
+            perks,
+            extraInfo,
+            checkIn,
+            checkOut,
+            maxGuests
+        })
+        res.status(201).json({
+            success: true,
+            place
+        })
+    } catch (error) {
+        console.log(error.message)
+    }
+
 }

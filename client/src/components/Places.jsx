@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import Perks from "./Perks";
 import axios from "axios";
 
 const Properties = () => {
+  const navigate = useNavigate();
   const { action } = useParams();
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
@@ -47,11 +48,44 @@ const Properties = () => {
         },
       }
     );
-    console.log(res.data);
     const filenames = res.data;
     setAddedPhotos((prev) => {
       return [...prev, ...filenames];
     });
+  };
+
+  const addNewPlace = async (ev) => {
+    ev.preventDefault();
+    try {
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/hotels/add",
+        {
+          title,
+          address,
+          addedPhotos,
+          description,
+          perks,
+          extraInfo,
+          checkIn,
+          checkOut,
+          maxGuests,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      if (res.data.success === true) {
+        alert("Place added successfully.");
+        navigate("/");
+      } else {
+        alert("Some error");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
@@ -82,7 +116,7 @@ const Properties = () => {
       )}
       {action === "new" && (
         <div>
-          <form>
+          <form onSubmit={addNewPlace}>
             <h2 className="text-2xl mt-4">Title</h2>
             <p className="text-sm text-gray-500">
               Title for your place. Should be short as in advertisements.
@@ -207,7 +241,9 @@ const Properties = () => {
                 />
               </div>
             </div>
-            <button className="primary my-4">Save</button>
+            <button type="submit" className="primary my-4">
+              Save
+            </button>
           </form>
         </div>
       )}
