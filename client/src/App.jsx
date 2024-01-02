@@ -8,6 +8,7 @@ import axios from "axios";
 import { useContext, useEffect } from "react";
 import { UserContext } from "./contexts/UserContext";
 import AccoutPage from "./pages/AccoutPage";
+import PlaceForm from "./components/PlaceForm";
 
 axios.defaults.baseURL = "http://localhost:4000/api/v1";
 
@@ -36,6 +37,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/account/:subpage?" element={<AccoutPage />} />
         <Route path="/account/:subpage/:action" element={<AccoutPage />} />
+        <Route path="/account/places/view/:id" element={<PlaceForm />} />
       </Route>
     </Routes>
   );

@@ -47,7 +47,7 @@ export const addHotel = async (req, res, next) => {
             owner: req.user._id,
             title,
             address,
-            addedPhotos,
+            photos: addedPhotos,
             description,
             perks,
             extraInfo,
@@ -58,6 +58,19 @@ export const addHotel = async (req, res, next) => {
         res.status(201).json({
             success: true,
             place
+        })
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+export const getAllHotels = async (req, res, next) => {
+    try {
+        const userId = req.user._id
+        const hotels = await Place.find({ owner: userId })
+        res.status(200).json({
+            success: true,
+            hotels
         })
     } catch (error) {
         console.log(error.message)

@@ -4,7 +4,6 @@ import User from "../models/UserModel.js"
 export const isLoggedIn = async (req, res, next) => {
     try {
         const token = req.cookies.token || req.header("Authorization")?.replace("Bearer ", "")
-        console.log(token)
         if (!token) {
             return res.status(404).json({
                 success: false,
