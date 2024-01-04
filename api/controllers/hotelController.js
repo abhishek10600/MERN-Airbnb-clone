@@ -75,5 +75,53 @@ export const getAllHotels = async (req, res, next) => {
     } catch (error) {
         console.log(error.message)
     }
+}
 
+export const getHotelById = async (req, res, next) => {
+    try {
+        const { hotelId } = req.params
+        const hotel = await Place.findById(hotelId)
+        if (!hotel) {
+            res.status(404).json({
+                success: false,
+                message: "Hotel not found."
+            })
+        }
+        res.status(200).json({
+            success: true,
+            hotel
+        })
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+export const updateHotel = async (req, res, next) => {
+    const { hotelId } = req.params;
+    const { title, address, addedPhotos, description, perks, extraInfo, checkIn, checkOut, maxGuests } = req.body
+    try {
+        let hotel = await Place.findById(hotelId)
+        if (!hotel) {
+            res.status(404).json({
+                success: false,
+                message: "Hotel not found"
+            })
+        }
+        hotel.title = title
+        hotel.address = address
+        hotel.photos = addedPhotos
+        hotel.description = description
+        hotel.perks = perks
+        hotel.extraInfo = extraInfo
+        hotel.checkIn = checkIn
+        hotel.checkOut = checkOut
+        hotel.maxGuests = maxGuests
+        await hotel.save()
+        res.status(200).json({
+            success: true,
+            hotel
+        })
+    } catch (error) {
+
+    }
 }

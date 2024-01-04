@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Perks from "./Perks";
 import axios from "axios";
 
 const PlaceForm = () => {
   const { id } = useParams();
-  console.log({ id });
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
@@ -55,42 +54,102 @@ const PlaceForm = () => {
     });
   };
 
-  const addNewPlace = async (ev) => {
+  const savePlace = async (ev) => {
     ev.preventDefault();
     try {
-      const res = await axios.post(
-        "http://localhost:4000/api/v1/hotels/add",
-        {
-          title,
-          address,
-          addedPhotos,
-          description,
-          perks,
-          extraInfo,
-          checkIn,
-          checkOut,
-          maxGuests,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
+      if (id) {
+        //update place
+        const res = await axios.put(
+          `http://localhost:4000/api/v1/hotels/update/${id}`,
+          {
+            title,
+            address,
+            addedPhotos,
+            description,
+            perks,
+            extraInfo,
+            checkIn,
+            checkOut,
+            maxGuests,
           },
-          withCredentials: true,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+        if (res.data.success === true) {
+          alert("Place updated successfully.");
+          navigate("/account/places");
+        } else {
+          alert("Some error");
         }
-      );
-      if (res.data.success === true) {
-        alert("Place added successfully.");
-        navigate("/account/places");
       } else {
-        alert("Some error");
+        //add new place
+        const res = await axios.post(
+          "http://localhost:4000/api/v1/hotels/add",
+          {
+            title,
+            address,
+            addedPhotos,
+            description,
+            perks,
+            extraInfo,
+            checkIn,
+            checkOut,
+            maxGuests,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+        if (res.data.success === true) {
+          alert("Place added successfully.");
+          navigate("/account/places");
+        } else {
+          alert("Some error");
+        }
       }
     } catch (error) {
       console.log(error.message);
     }
   };
+
+  const getPlaceDetailsById = async (id) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:4000/api/v1/hotels/getHotelById/${id}`
+      );
+      if (res.data.success === true) {
+        setTitle(res.data.hotel.title);
+        setAddress(res.data.hotel.address);
+        setAddedPhotos(res.data.hotel.photos);
+        setDescription(res.data.hotel.description);
+        setPerks(res.data.hotel.perks);
+        setExtraInfo(res.data.hotel.extraInfo);
+        setCheckIn(res.data.hotel.checkIn);
+        setCheckOut(res.data.hotel.checkOut);
+        setMaxGuests(res.data.hotel.maxGuests);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (!id) {
+      return;
+    }
+    getPlaceDetailsById(id);
+  }, [id]);
+
   return (
     <div>
-      <form onSubmit={addNewPlace}>
+      <form onSubmit={savePlace}>
         <h2 className="text-2xl mt-4">Title</h2>
         <p className="text-sm text-gray-500">
           Title for your place. Should be short as in advertisements.
