@@ -7,7 +7,7 @@ const PlaceList = () => {
   const getAllPlaces = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:4000/api/v1/hotels/allHotels",
+        "http://localhost:4000/api/v1/hotels/allUserHotels",
         {
           headers: {
             "Content-Type": "application/json",

@@ -16,6 +16,7 @@ const PlaceForm = () => {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [maxGuests, setMaxGuests] = useState(1);
+  const [price, setPrice] = useState(100);
 
   const addPhotoByLink = async (ev) => {
     ev.preventDefault();
@@ -84,6 +85,7 @@ const PlaceForm = () => {
             checkIn,
             checkOut,
             maxGuests,
+            price,
           },
           {
             headers: {
@@ -112,6 +114,7 @@ const PlaceForm = () => {
             checkIn,
             checkOut,
             maxGuests,
+            price,
           },
           {
             headers: {
@@ -147,6 +150,7 @@ const PlaceForm = () => {
         setCheckIn(res.data.hotel.checkIn);
         setCheckOut(res.data.hotel.checkOut);
         setMaxGuests(res.data.hotel.maxGuests);
+        setPrice(res.data.hotel.price);
       }
     } catch (error) {
       console.log(error.message);
@@ -312,7 +316,7 @@ const PlaceForm = () => {
           Add checkin and checkout times. Remember to have some time window for
           cleaning the room between the guests.
         </p>
-        <div className="grid gap-2 sm:grid-cols-3">
+        <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
           <div>
             <h3 className="mt-2 -mb-1">Checkin time</h3>
             <input
@@ -338,6 +342,15 @@ const PlaceForm = () => {
               placeholder="2"
               value={maxGuests}
               onChange={(ev) => setMaxGuests(ev.target.value)}
+            />
+          </div>
+          <div>
+            <h3 className="mt-2 -mb-1">Price per night</h3>
+            <input
+              type="number"
+              placeholder="2"
+              value={price}
+              onChange={(ev) => setPrice(ev.target.value)}
             />
           </div>
         </div>

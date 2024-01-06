@@ -40,7 +40,7 @@ export const uploadImage = async (req, res, next) => {
 }
 
 export const addHotel = async (req, res, next) => {
-    const { title, address, addedPhotos, description, perks, extraInfo, checkIn, checkOut, maxGuests } = req.body
+    const { title, address, addedPhotos, description, perks, extraInfo, checkIn, checkOut, maxGuests, price } = req.body
     try {
         console.log("hello")
         const place = await Place.create({
@@ -53,7 +53,8 @@ export const addHotel = async (req, res, next) => {
             extraInfo,
             checkIn,
             checkOut,
-            maxGuests
+            maxGuests,
+            price
         })
         res.status(201).json({
             success: true,
@@ -65,6 +66,18 @@ export const addHotel = async (req, res, next) => {
 }
 
 export const getAllHotels = async (req, res, next) => {
+    try {
+        const hotels = await Place.find()
+        res.status(200).json({
+            success: true,
+            hotels
+        })
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+export const getAllUserHotels = async (req, res, next) => {
     try {
         const userId = req.user._id
         const hotels = await Place.find({ owner: userId })
@@ -98,7 +111,7 @@ export const getHotelById = async (req, res, next) => {
 
 export const updateHotel = async (req, res, next) => {
     const { hotelId } = req.params;
-    const { title, address, addedPhotos, description, perks, extraInfo, checkIn, checkOut, maxGuests } = req.body
+    const { title, address, addedPhotos, description, perks, extraInfo, checkIn, checkOut, maxGuests, price } = req.body
     try {
         let hotel = await Place.findById(hotelId)
         if (!hotel) {
@@ -116,12 +129,13 @@ export const updateHotel = async (req, res, next) => {
         hotel.checkIn = checkIn
         hotel.checkOut = checkOut
         hotel.maxGuests = maxGuests
+        hotel.price = price
         await hotel.save()
         res.status(200).json({
             success: true,
             hotel
         })
     } catch (error) {
-
+        console.log(error.message)
     }
 }
