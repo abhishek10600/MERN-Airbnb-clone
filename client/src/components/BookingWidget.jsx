@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { differenceInCalendarDays } from "date-fns";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const BookingWidget = ({ place }) => {
+const BookingWidget = ({ place, placeId }) => {
+  const navigate = useNavigate();
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
@@ -14,6 +17,34 @@ const BookingWidget = ({ place }) => {
       new Date(checkIn)
     );
   }
+  const bookThisPlace = async (ev) => {
+    ev.preventDefault();
+    try {
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/bookings/newBooking",
+        {
+          placeId,
+          checkIn: new Date(checkIn),
+          checkOut: new Date(checkOut),
+          numberOfGuests,
+          name,
+          mobile,
+          price: numberOfNights * place.price,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      if (res.data.success === true) {
+        navigate("/account/bookings");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div className="bg-white shadow p-4 rounded-2xl">
       <div className="text-2xl text-center">
@@ -67,7 +98,7 @@ const BookingWidget = ({ place }) => {
           </>
         )}
       </div>
-      <button className="primary mt-4">
+      <button onClick={bookThisPlace} className="primary mt-4">
         Book this place
         {numberOfNights > 0 && (
           <span> &#8377;{numberOfNights * place.price}</span>

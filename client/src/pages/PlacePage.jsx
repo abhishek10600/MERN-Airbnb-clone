@@ -1,9 +1,12 @@
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../contexts/UserContext";
 import BookingWidget from "../components/BookingWidget";
+import { Link } from "react-router-dom";
 
 const PlacePage = () => {
+  const { isLoggedIn } = useContext(UserContext);
   const [place, setPlace] = useState([]);
   const { id } = useParams();
   const [showAllPhotos, setShowAllPhotos] = useState(false);
@@ -153,7 +156,18 @@ const PlacePage = () => {
           <br />
           Max number of people: {place.maxGuests}
         </div>
-        <BookingWidget place={place} />
+        {isLoggedIn ? (
+          <BookingWidget place={place} placeId={id} />
+        ) : (
+          <div className="bg-white shadow-2xl flex justify-center items-center">
+            <Link
+              to="/login"
+              className="bg-primary py-2 px-4 rounded-2xl text-white"
+            >
+              Login to book this place
+            </Link>
+          </div>
+        )}
       </div>
       <div className="bg-white -mx-8 px-8 py-8 mt-4 border-t">
         <div>

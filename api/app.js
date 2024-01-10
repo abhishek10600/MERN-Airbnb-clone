@@ -5,6 +5,7 @@ import path from "path"
 import { fileURLToPath } from "url"
 import userRouter from "./routes/userRouter.js"
 import hotelRouter from "./routes/hotelRouter.js"
+import bookingRouter from "./routes/bookingRouter.js"
 import cookieParser from "cookie-parser"
 
 const app = express()
@@ -29,6 +30,7 @@ app.get("/testing", (req, res) => {
 
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/hotels", hotelRouter)
+app.use("/api/v1/bookings", bookingRouter)
 
 
 export default app

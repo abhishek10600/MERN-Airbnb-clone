@@ -3,6 +3,7 @@ import { UserContext } from "../contexts/UserContext";
 import { Link, useNavigate, Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Places from "../components/Places";
+import Booking from "../components/Booking";
 
 const AccoutPage = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const AccoutPage = () => {
   };
 
   const logoutButtonClick = async () => {
-    const res = await axios.get("/users/logout", {
+    const res = await axios.get("http://localhost:4000/api/v1/users/logout", {
       withCredentials: true,
     });
     if (res.data.success === true) {
@@ -110,11 +111,7 @@ const AccoutPage = () => {
           </h1>
         </div>
       )}
-      {subpage === "bookings" && (
-        <div>
-          <h1>This is bookings page</h1>
-        </div>
-      )}
+      {subpage === "bookings" && <Booking />}
       {subpage === "places" && <Places />}
     </div>
   );
